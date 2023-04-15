@@ -50,7 +50,7 @@ def home(request):
         name = Teacher.objects.filter(Id=int(request.POST['ID']))[0].nameT
         pari = Para.objects.filter(nameT__contains=name)
         for par in pari:
-            if (nedelya%2-1)==(par.period%2):
+            if (nedelya%2)==((par.period+1)%2):
                 response.append([days[par.date], par.period//2+1, par.nameC, par.categ, par.nameT, par.place])
         print(response)
     else:
