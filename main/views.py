@@ -15,7 +15,7 @@ import re
 
 def createDB(request):
     paras = get_list_of_paras()
-    print(len(paras))
+    #print(len(paras))
     wrong = 0
     teacs = []
     while len(paras)>0:
@@ -46,13 +46,14 @@ def home(request):
     if request.method == 'POST':
         form = ReqForm(request.POST)
         nedelya = int(request.POST['nedelya'])
-        print(request.POST['ID'])
+        #print(request.POST['ID'])
         name = Teacher.objects.filter(Id=int(request.POST['ID']))[0].nameT
         pari = Para.objects.filter(nameT__contains=name)
         for par in pari:
             if (nedelya%2)==((par.period+1)%2):
                 response.append([days[par.date], par.period//2+1, par.nameC, par.categ, par.nameT, par.place])
-        print(response)
+        response = sorted(response, key=lambda x: list(days.values()).index(x[0]))
+        #print(response)
     else:
         form = ReqForm()
     context = {'form':form, 'resp':response}
@@ -62,7 +63,7 @@ class TeacherAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = Teacher.objects.all()
         if self.q:
-            qs = qs.filter(nameT__icontains=self.q)
+            qs = qs.filter(nameT__iregex=self.q)
         return qs
 
 
@@ -92,7 +93,8 @@ def get_list_of_paras():
     from time import sleep
     def show(arr):
         for i in arr:
-            print(i)
+            pass
+            #print(i)
 
     url = 'https://www.mirea.ru/schedule/'
 
